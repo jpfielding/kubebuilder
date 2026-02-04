@@ -55,7 +55,14 @@ RUN set -eux && \
     export VERSION="v0.31.0" && \
     curl -kL -o ${HOME}/bin/kind "https://kind.sigs.k8s.io/dl/v0.31.0/kind-linux-${ARCH}" && \
     chmod +x ${HOME}/bin/kind
-    
+
+RUN set -eux && \
+    export ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
+    export VERSION="v0.50.18" && \
+    curl -kL -o /tmp/k9s.tar.gz "https://github.com/derailed/k9s/releases/download/${VERSION}/k9s_Linux_${ARCH}.tar.gz" && \
+    tar -xzf /tmp/k9s.tar.gz -C ${HOME}/bin k9s && \
+    chmod +x ${HOME}/bin/k9s
+
 # go
 ENV GO_VERSION "1.25.6"
 ENV GOPRIVATE "*.psdo.leidos.com"
