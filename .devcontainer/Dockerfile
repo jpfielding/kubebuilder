@@ -63,6 +63,9 @@ RUN set -eux && \
     tar -xzf /tmp/k9s.tar.gz -C ${HOME}/bin k9s && \
     chmod +x ${HOME}/bin/k9s
 
+RUN curl -L -o kubebuilder "https://go.kubebuilder.io/dl/latest/$(go env GOOS)/$(go env GOARCH)" && \
+    chmod +x ${HOME}/bin/kubebuilder
+
 # go
 ENV GO_VERSION "1.25.6"
 ENV GOPRIVATE "*.psdo.leidos.com"
