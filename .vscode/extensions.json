@@ -1,0 +1,12 @@
+{
+    "unwantedRecommendations": [
+    ],
+    "recommendations": [
+        "eamodio.gitlens",
+        "GitHub.copilot-chat",
+        "bierner.markdown-mermaid",
+        "ms-azuretools.vscode-docker",
+        "ms-vsliveshare.vsliveshare",
+        "ms-vscode.makefile-tools"
+    ]
+}

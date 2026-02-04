@@ -1,0 +1,61 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    // go get github.com/go-delve/delve/cmd/dlv 
+    "version": "0.2.0",
+    "inputs": [],
+    "configurations": [
+        {
+            "name": "Tests",
+            "type": "go",
+            "request": "launch",
+            "mode": "test",
+            "args": [
+                "-short",
+                "-v",
+            ],
+            "program": "${wo,rkspaceFolder}/..."
+        },
+        {
+            "name": "Goxel",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/ctl",
+            "env": {},
+            "args": [
+                "goxel",
+                "-u",
+                "file://${workspaceFolder}/pkg/uio2dicos/testdata/uio/cct/example/example.uio.gz",
+            ]
+        },
+        {
+            "name": "Goxel Remote",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/ctl",
+            "env": {},
+            "args": [
+                "goxel",
+                "-k",
+                "-u",
+                "https://localhost:45851/?data_id=cdc65041-ccae-4b5d-92ed-7c9e5c148932",
+            ]
+        },
+        {
+            "name": "DICOS decoder",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/ctl",
+            "env": {},
+            "args": [
+                "decode",
+                "-u",
+                "${workspaceFolder}/pkg/dicos/testdata/leidos.dcs",
+            ]
+        },
+    ]
+}
