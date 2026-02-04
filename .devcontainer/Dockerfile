@@ -43,6 +43,19 @@ RUN echo '{"hasCompletedOnboarding": true}' > ${HOME}/.claude.json
 # this may be temporary
 ENV CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
 
+
+RUN set -eux && \
+    export ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
+    export VERSION="$(curl -L -s https://dl.k8s.io/release/stable.txt)" && \
+    curl -kL -o ${HOME}/bin/kubectl "https://dl.k8s.io/release/${VERSION}/bin/linux/${ARCH}/kubectl" && \
+    chmod +x ${HOME}/bin/kubectl 
+
+RUN set -eux && \
+    export ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
+    export VERSION="v0.31.0" && \
+    curl -kL -o ${HOME}/bin/kind "https://kind.sigs.k8s.io/dl/v0.31.0/kind-linux-${ARCH}" && \
+    chmod +x ${HOME}/bin/kind
+    
 # go
 ENV GO_VERSION "1.25.6"
 ENV GOPRIVATE "*.psdo.leidos.com"
@@ -59,4 +72,3 @@ RUN set -eux && \
 COPY --chown=${USERNAME}:${USERNAME} .bash_pretty ${HOME}/.bash_pretty
 RUN set -eux && \
     echo "source ${HOME}/.bash_pretty" >> ${HOME}/.bashrc
-

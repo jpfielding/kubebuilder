@@ -50,8 +50,13 @@
     },
     {
       "type": "bind",
-      "source": "${localEnv:HOME}/.codex",
-      "target": "/home/${localEnv:USER:k8s}/.codex"
+      "source": "${localEnv:HOME}/.kube-${localWorkspaceFolderBasename}",
+      "target": "/home/${localEnv:USER:k8s}/.kube"
+    },
+    {
+      "type": "bind",
+      "source": "/var/run/docker.sock",
+      "target": "/var/run/docker.sock"
     },
     {
       "type": "bind",
@@ -64,7 +69,7 @@
   "initializeCommand": {
     "netrc": "touch ${localEnv:HOME}/.netrc",
     "ssh dir": "mkdir -p ${localEnv:HOME}/.ssh",
-    "kube dir": "mkdir -p ${localEnv:HOME}/.kube",
+    "kube dir": "mkdir -p ${localEnv:HOME}/.kube-${localWorkspaceFolderBasename}",
     "gitconfig": "touch ${localEnv:HOME}/.gitconfig",
     "git creds": "touch ${localEnv:HOME}/.git-credentials",
     "gemini": "mkdir -p ${localEnv:HOME}/.gemini || true",
