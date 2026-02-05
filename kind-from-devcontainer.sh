@@ -2,7 +2,7 @@
 
 # Allows us to create a kind cluster that can be accessed via host.docker.internal
 
-NAME=${1}
+NAME=${1:-"kind"}
 
 kind create cluster --name "${NAME}" --config - <<EOF
 kind: Cluster
@@ -19,4 +19,6 @@ nodes:
         - "localhost"
 EOF
 
-kubectl config set-cluster kind-kind --server=https://host.docker.internal:$(kubectl config view -o jsonpath='{.clusters[?(@.name=="kind-kind")].cluster.server}' | cut -d: -f3)
+kubectl config \
+  set-cluster kind-${NAME} --server=https://host.docker.internal:$(kubectl \
+  config view -o jsonpath='{.clusters[?(@.name=="kind-kind")].cluster.server}' | cut -d: -f3)

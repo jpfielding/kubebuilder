@@ -45,9 +45,6 @@ ENV PATH ${HOME}/bin:${PATH}
 ENV PATH=${HOME}/bin:${HOME}/.local/bin:${PATH}
 ENV NODE_EXTRA_CA_CERTS="/etc/pki/ca-trust/source/anchors/custom_cas.pem"
 RUN echo '{"hasCompletedOnboarding": true}' > ${HOME}/.claude.json
-# this may be temporary
-ENV CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
-
 
 RUN set -eux && \
     export ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
