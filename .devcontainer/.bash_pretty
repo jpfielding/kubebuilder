@@ -40,3 +40,4 @@ GoToVersion() {
 # personal prefs
 alias ls='ls --color'
 alias ll='ls -al'
+alias kc='kubectl'
