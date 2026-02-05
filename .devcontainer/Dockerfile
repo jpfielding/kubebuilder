@@ -14,6 +14,9 @@ RUN set -eux -o pipefail && \
     dnf --setopt=***.sslverify=false -y update
 RUN set -eux -o pipefail && \
     dnf --setopt=***.sslverify=false install -y ca-certificates curl-minimal git git-lfs iproute jq make msitools ncurses nss-tools procps sudo wget which zsh zip
+RUN set -eux -o pipefail && \
+    dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
+    dnf install -y docker-ce-cli
 
 FROM base as user
 
@@ -22,6 +25,8 @@ RUN groupadd --gid ${USER_GID} ${USERNAME} && \
   useradd --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} -s /bin/zsh && \
   echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} && \
   chmod 0440 /etc/sudoers.d/${USERNAME}
+
+RUN usermod -aG docker ${USERNAME} && \
 
 ########### NON ROOT FROM HERE DOWN ###########
 USER ${USERNAME}

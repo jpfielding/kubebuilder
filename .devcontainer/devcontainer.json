@@ -55,7 +55,7 @@
     },
     {
       "type": "bind",
-      "source": "/var/run/docker.sock",
+      "source": "${localEnv:HOME}/.docker/run/docker.sock",
       "target": "/var/run/docker.sock"
     },
     {
@@ -76,5 +76,6 @@
     "claude": "mkdir -p ${localEnv:HOME}/.claude || true",
     "bash history": "touch ${localEnv:HOME}/.bash_history_${localWorkspaceFolderBasename}"
   },
-  "forwardPorts": []
+  "forwardPorts": [],
+  "postStartCommand": "sudo chgrp docker /var/run/docker.sock"
 }
