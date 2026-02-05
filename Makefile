@@ -21,7 +21,7 @@ clean:  ## Removes build/test outputs.
 	go clean
 
 update-deps:  ## Tidies up the go module.
-	go get -u ./... && go mod tidy && go mod vendor	
+	go get -u ./... && GOPROXY=direct go mod tidy && go mod vendor	
 
 ### TEST commands ####
 test:  ## Runs short tests.
