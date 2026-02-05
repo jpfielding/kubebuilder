@@ -63,7 +63,7 @@ RUN set -eux && \
     tar -xzf /tmp/k9s.tar.gz -C ${HOME}/bin k9s && \
     chmod +x ${HOME}/bin/k9s
 
-RUN curl -L -o kubebuilder "https://go.kubebuilder.io/dl/latest/$(go env GOOS)/$(go env GOARCH)" && \
+RUN curl -L -o ${HOME}/bin/kubebuilder "https://go.kubebuilder.io/dl/latest/$(go env GOOS)/$(go env GOARCH)" && \
     chmod +x ${HOME}/bin/kubebuilder
 
 # go
