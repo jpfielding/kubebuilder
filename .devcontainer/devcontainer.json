@@ -13,7 +13,8 @@
       "extensions": [
         "golang.go",
         "eamodio.gitlens",
-        "Anthropic.claude-code"
+        "Anthropic.claude-code",
+        "openai.chatgpt"
       ]
     }
   },
