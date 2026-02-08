@@ -50,6 +50,11 @@
     },
     {
       "type": "bind",
+      "source": "${localEnv:HOME}/.codex",
+      "target": "/home/${localEnv:USER:k8s}/.codex"
+    },
+    {
+      "type": "bind",
       "source": "${localEnv:HOME}/.kube-${localWorkspaceFolderBasename}",
       "target": "/home/${localEnv:USER:k8s}/.kube"
     },

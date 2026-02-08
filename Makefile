@@ -58,10 +58,36 @@ install-claude:
 	claude doctor && \
 	jq '.hasCompletedOnboarding = true' ${HOME}/.claude.json > ${HOME}/.claude.tmp.json && mv ${HOME}/.claude.tmp.json ${HOME}/.claude.json
 
+install-codex: # opena-ai codex.rs
+	ARCH=$(shell arch) && \
+	OS=$(shell uname  | sed 's/Darwin/apple-darwin/' | sed 's/Linux/unknown-linux-musl/') && \
+	curl -o /tmp/codex.tar.gz -L "https://github.com/openai/codex/releases/download/rust-v0.98.0/codex-$${ARCH}-$${OS}.tar.gz" && \
+	tar -xvzf /tmp/codex.tar.gz -C /tmp && \
+	mv /tmp/codex-$${ARCH}-$${OS} ${HOME}/bin/codex && \
+	chmod +x ${HOME}/bin/codex
+
 install-kubectl: #
-	VERSION="v1.35" && \
-	curl -o /tmp/kubectl -L "https://dl.k8s.io/release/$${VERSION}/bin/linux/${ARCH}/kubectl" && \
+    VERSION="$(curl -L -s https://dl.k8s.io/release/stable.txt)" && \
+    ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
+	curl -o /tmp/kubectl -L "https://dl.k8s.io/release/$${VERSION}/bin/linux/$${ARCH}/kubectl" && \
 	chmod +x /tmp/kubectl && mv /tmp/kubectl ${HOME}/bin/
+
+install-kind: #
+    ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
+    VERSION="v0.31.0" && \
+    curl -kL -o ${HOME}/bin/kind "https://kind.sigs.k8s.io/dl/$${VERSION}/kind-linux-$${ARCH}" && \
+    chmod +x ${HOME}/bin/kind
+
+install-k8s: #
+    ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
+    VERSION="v0.50.18" && \
+    curl -kL -o /tmp/k9s.tar.gz "https://github.com/derailed/k9s/releases/download/$${VERSION}/k9s_Linux_$${ARCH}.tar.gz" && \
+    tar -xzf /tmp/k9s.tar.gz -C ${HOME}/bin k9s && \
+    chmod +x ${HOME}/bin/k9s
+
+install-kubebuilder: #
+	curl -L -o ${HOME}/bin/kubebuilder "https://go.kubebuilder.io/dl/latest/$(go env GOOS)/$(go env GOARCH)" && \
+    chmod +x ${HOME}/bin/kubebuilder
 
 install-gitlab-cli: # gitlab tools for repo managment
 	VERSION="1.80.4" && \

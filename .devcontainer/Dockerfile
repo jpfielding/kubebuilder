@@ -37,42 +37,20 @@ RUN set -eux && \
     sudo chown ${USERNAME}:${USERNAME} /workdir
 
 # envs
-ENV HOME "/home/${USERNAME}"
-ENV SDK_HOME ${HOME}/sdk
-ENV PATH ${HOME}/bin:${PATH}
+ENV HOME="/home/${USERNAME}"
+ENV SDK_HOME="${HOME}/sdk"
+ENV PATH="${HOME}/bin:${PATH}"
 
 # claude code
-ENV PATH=${HOME}/bin:${HOME}/.local/bin:${PATH}
+ENV PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
 ENV NODE_EXTRA_CA_CERTS="/etc/pki/ca-trust/source/anchors/custom_cas.pem"
 RUN echo '{"hasCompletedOnboarding": true}' > ${HOME}/.claude.json
 
-RUN set -eux && \
-    export ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
-    export VERSION="$(curl -L -s https://dl.k8s.io/release/stable.txt)" && \
-    curl -kL -o ${HOME}/bin/kubectl "https://dl.k8s.io/release/${VERSION}/bin/linux/${ARCH}/kubectl" && \
-    chmod +x ${HOME}/bin/kubectl 
-
-RUN set -eux && \
-    export ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
-    export VERSION="v0.31.0" && \
-    curl -kL -o ${HOME}/bin/kind "https://kind.sigs.k8s.io/dl/v0.31.0/kind-linux-${ARCH}" && \
-    chmod +x ${HOME}/bin/kind
-
-RUN set -eux && \
-    export ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
-    export VERSION="v0.50.18" && \
-    curl -kL -o /tmp/k9s.tar.gz "https://github.com/derailed/k9s/releases/download/${VERSION}/k9s_Linux_${ARCH}.tar.gz" && \
-    tar -xzf /tmp/k9s.tar.gz -C ${HOME}/bin k9s && \
-    chmod +x ${HOME}/bin/k9s
-
-RUN curl -L -o ${HOME}/bin/kubebuilder "https://go.kubebuilder.io/dl/latest/$(go env GOOS)/$(go env GOARCH)" && \
-    chmod +x ${HOME}/bin/kubebuilder
-
 # go
-ENV GO_VERSION "1.25.6"
-ENV GOPRIVATE "*.psdo.leidos.com"
-ENV GOPATH ${SDK_HOME}/go
-ENV PATH ${GOPATH}/bin:${HOME}/sdk/go:${PATH}
+ENV GO_VERSION="1.25.7"
+ENV GOPRIVATE="*.psdo.leidos.com"
+ENV GOPATH="${SDK_HOME}/go"
+ENV PATH="${GOPATH}/bin:${HOME}/sdk/go:${PATH}"
 RUN set -eux && \
     export GO_ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
     cd /tmp && mkdir -p ${SDK_HOME} && \
