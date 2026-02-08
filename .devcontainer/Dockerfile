@@ -13,7 +13,7 @@ RUN set -eux -o pipefail && \
     dnf install -y epel-release && \
     dnf -y update
 RUN set -eux -o pipefail && \
-    dnf install -y ca-certificates curl-minimal git git-lfs iproute jq make msitools ncurses nss-tools procps sudo wget which zsh zip
+    dnf install -y ca-certificates curl-minimal git git-lfs iproute iputils jq make msitools ncurses nss-tools procps sudo wget which zsh zip
 RUN set -eux -o pipefail && \
     dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
     dnf install -y docker-ce-cli
@@ -41,11 +41,6 @@ ENV HOME="/home/${USERNAME}"
 ENV SDK_HOME="${HOME}/sdk"
 ENV PATH="${HOME}/bin:${PATH}"
 
-# kind uses our network
-ENV KIND_EXPERIMENTAL_DOCKER_NETWORK=${REPO_NAME}
-ENV KIND_CLUSTER_NAME=${REPO_NAME}
-ENV KUBECONFIG="${HOME}/.kube/config-${REPO_NAME}"
-    
 # claude code
 ENV PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
 ENV NODE_EXTRA_CA_CERTS="/etc/pki/ca-trust/source/anchors/custom_cas.pem"

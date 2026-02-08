@@ -70,8 +70,8 @@ install-k8s: install-kubectl install-kind install-k9s install-kubebuilder
 
 .PHONY: install-kubectl
 install-kubectl: #
-	VERSION="$(curl -L -s https://dl.k8s.io/release/stable.txt)" && \
-	ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
+	VERSION="$(shell curl -L -s https://dl.k8s.io/release/stable.txt)" && \
+	ARCH="$(shell arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
 	curl -o ${HOME}/bin/kubectl -L "https://dl.k8s.io/release/$${VERSION}/bin/linux/$${ARCH}/kubectl" && \
 	chmod +x ${HOME}/bin/kubectl
 
