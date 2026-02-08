@@ -54,11 +54,11 @@
       "source": "${localEnv:HOME}/.codex",
       "target": "/home/${localEnv:USER:k8s}/.codex"
     },
-    {
-      "type": "bind",
-      "source": "${localEnv:HOME}/.kube-${localWorkspaceFolderBasename}",
-      "target": "/home/${localEnv:USER:k8s}/.kube"
-    },
+    // {
+    //   "type": "bind",
+    //   "source": "${localEnv:HOME}/.kube-${localWorkspaceFolderBasename}",
+    //   "target": "/home/${localEnv:USER:k8s}/.kube"
+    // },
     {
       "type": "bind",
       "source": "${localEnv:HOME}/.docker/run/docker.sock",
@@ -72,7 +72,11 @@
   ],
   "workspaceMount": "source=${localWorkspaceFolder},target=/workdir/${localWorkspaceFolderBasename},type=bind,consistency=cached",
   "workspaceFolder": "/workdir/${localWorkspaceFolderBasename}",
+  "runArgs": [
+    "--network=${localWorkspaceFolderBasename}"
+  ],
   "initializeCommand": {
+    "docker network": "docker network create ${localWorkspaceFolderBasename} > /dev/null 2>&1 || true;",
     "netrc": "touch ${localEnv:HOME}/.netrc",
     "ssh dir": "mkdir -p ${localEnv:HOME}/.ssh",
     "kube dir": "mkdir -p ${localEnv:HOME}/.kube-${localWorkspaceFolderBasename}",

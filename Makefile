@@ -49,7 +49,7 @@ vulnerability-report: ## Runs the vulnerability check.
 	mkdir -p tmp && govulncheck -json ./pkg/... > tmp/go-vuln-report.json
 
 #### INSTALL TOOLS ####
-install-tools: install-claude install-cert-tools install-gitlab-cli install-cicd-tools
+install-tools: install-claude install-k8s install-cert-tools install-gitlab-cli install-cicd-tools
 
 .PHONY: install-claude
 install-claude:
@@ -66,28 +66,37 @@ install-codex: # opena-ai codex.rs
 	mv /tmp/codex-$${ARCH}-$${OS} ${HOME}/bin/codex && \
 	chmod +x ${HOME}/bin/codex
 
+install-k8s: install-kubectl install-kind install-k9s install-kubebuilder
+
+.PHONY: install-kubectl
 install-kubectl: #
-    VERSION="$(curl -L -s https://dl.k8s.io/release/stable.txt)" && \
-    ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
-	curl -o /tmp/kubectl -L "https://dl.k8s.io/release/$${VERSION}/bin/linux/$${ARCH}/kubectl" && \
-	chmod +x /tmp/kubectl && mv /tmp/kubectl ${HOME}/bin/
+	VERSION="$(curl -L -s https://dl.k8s.io/release/stable.txt)" && \
+	ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
+	curl -o ${HOME}/bin/kubectl -L "https://dl.k8s.io/release/$${VERSION}/bin/linux/$${ARCH}/kubectl" && \
+	chmod +x ${HOME}/bin/kubectl
 
+.PHONY: install-kind
 install-kind: #
-    ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
-    VERSION="v0.31.0" && \
-    curl -kL -o ${HOME}/bin/kind "https://kind.sigs.k8s.io/dl/$${VERSION}/kind-linux-$${ARCH}" && \
-    chmod +x ${HOME}/bin/kind
+	OS=$(shell uname | tr '[:upper:]' '[:lower:]') && \
+	ARCH="$(shell arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
+	VERSION="latest" && \
+	curl -L -o ${HOME}/bin/kind "https://kind.sigs.k8s.io/dl/$${VERSION}/kind-$${OS}-$${ARCH}" && \
+	chmod +x ${HOME}/bin/kind
 
-install-k8s: #
-    ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
-    VERSION="v0.50.18" && \
-    curl -kL -o /tmp/k9s.tar.gz "https://github.com/derailed/k9s/releases/download/$${VERSION}/k9s_Linux_$${ARCH}.tar.gz" && \
-    tar -xzf /tmp/k9s.tar.gz -C ${HOME}/bin k9s && \
-    chmod +x ${HOME}/bin/k9s
+.PHONY: install-k9s
+install-k9s: #
+	OS=$(shell uname) && \
+	ARCH="$(shell arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
+	VERSION="v0.50.18" && \
+	curl -L -o /tmp/k9s.tar.gz "https://github.com/derailed/k9s/releases/download/$${VERSION}/k9s_$${OS}_$${ARCH}.tar.gz" && \
+	tar -xzf /tmp/k9s.tar.gz -C ${HOME}/bin k9s && \
+	chmod +x ${HOME}/bin/k9s
 
+.PHONY: install-kubebuilder
 install-kubebuilder: #
-	curl -L -o ${HOME}/bin/kubebuilder "https://go.kubebuilder.io/dl/latest/$(go env GOOS)/$(go env GOARCH)" && \
-    chmod +x ${HOME}/bin/kubebuilder
+	VERSION="latest" && \
+	curl -L -o ${HOME}/bin/kubebuilder "https://go.kubebuilder.io/dl/$${VERSION}/$(go env GOOS)/$(go env GOARCH)" && \
+	chmod +x ${HOME}/bin/kubebuilder
 
 install-gitlab-cli: # gitlab tools for repo managment
 	VERSION="1.80.4" && \
