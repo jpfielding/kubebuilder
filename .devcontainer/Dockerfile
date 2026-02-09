@@ -9,8 +9,7 @@ ARG USER_GID=$USER_UID
 COPY cas.pem /etc/pki/ca-trust/source/anchors/custom_cas.pem
 RUN update-ca-trust
 
-RUN dnf install -y epel-release && \
-    dnf -y update
+RUN dnf install -y epel-release && dnf -y update
 RUN dnf install -y curl-minimal git iproute iputils jq make sudo wget which zip
 RUN dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
     dnf install -y docker-ce-cli
