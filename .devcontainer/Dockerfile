@@ -6,16 +6,13 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
 # Add ca certs so we can build the image on vpn
-COPY cas.pem /etc/pki/ca-trust/source/anchors/cas.pem
+COPY cas.pem /etc/pki/ca-trust/source/anchors/custom_cas.pem
 RUN update-ca-trust
 
-RUN set -eux -o pipefail && \
-    dnf install -y epel-release && \
+RUN dnf install -y epel-release && \
     dnf -y update
-RUN set -eux -o pipefail && \
-    dnf install -y ca-certificates curl-minimal git git-lfs iproute iputils jq make msitools ncurses nss-tools procps sudo wget which zsh zip
-RUN set -eux -o pipefail && \
-    dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
+RUN dnf install -y curl-minimal git iproute iputils jq make sudo wget which zip
+RUN dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
     dnf install -y docker-ce-cli
 
 FROM base AS user
@@ -40,6 +37,8 @@ RUN set -eux && \
 ENV HOME="/home/${USERNAME}"
 ENV SDK_HOME="${HOME}/sdk"
 ENV PATH="${HOME}/bin:${PATH}"
+
+COPY kind-create.sh ${HOME}/bin/kind-create.sh
 
 # claude code
 ENV PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
