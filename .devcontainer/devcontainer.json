@@ -61,7 +61,7 @@
     },
     {
       "type": "bind",
-      "source": "${localEnv:HOME}/.docker/run/docker.sock",
+      "source": "/var/run/docker.sock",
       "target": "/var/run/docker.sock"
     },
     {
