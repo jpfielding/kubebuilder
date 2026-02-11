@@ -31,11 +31,6 @@
     },
     {
       "type": "bind",
-      "source": "${localEnv:HOME}/.git-credentials",
-      "target": "/home/${localEnv:USER:k8s}/.git-credentials"
-    },
-    {
-      "type": "bind",
       "source": "${localEnv:HOME}/.ssh",
       "target": "/home/${localEnv:USER:k8s}/.ssh"
     },
@@ -80,6 +75,7 @@
     "git creds": "touch ${localEnv:HOME}/.git-credentials",
     "gemini": "mkdir -p ${localEnv:HOME}/.gemini || true",
     "claude": "mkdir -p ${localEnv:HOME}/.claude || true",
+    "codex": "mkdir -p ${localEnv:HOME}/.codex || true",
     "bash history": "touch ${localEnv:HOME}/.bash_history_${localWorkspaceFolderBasename}"
   },
   "forwardPorts": []

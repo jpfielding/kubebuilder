@@ -1,4 +1,4 @@
-FROM rockylinux:9 AS base
+FROM rockylinux/rockylinux:10 AS base
 
 ARG REPO_NAME=kubebuilder
 ARG USERNAME=k8s
@@ -37,7 +37,12 @@ ENV HOME="/home/${USERNAME}"
 ENV SDK_HOME="${HOME}/sdk"
 ENV PATH="${HOME}/bin:${PATH}"
 
-COPY kind-create.sh ${HOME}/bin/kind-create.sh
+# pretty bash
+COPY --chown=${USERNAME}:${USERNAME} .bash_pretty ${HOME}/.bash_pretty
+RUN echo "source ${HOME}/.bash_pretty" >> ${HOME}/.bashrc
+
+# our dev tools
+COPY --chown=${USERNAME}:${USERNAME} bin ${HOME}/bin
 
 # claude code
 ENV PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
@@ -45,18 +50,12 @@ ENV NODE_EXTRA_CA_CERTS="/etc/pki/ca-trust/source/anchors/custom_cas.pem"
 RUN echo '{"hasCompletedOnboarding": true}' > ${HOME}/.claude.json
 
 # go
-ENV GO_VERSION="1.25.7"
-ENV GOPRIVATE="*.psdo.leidos.com"
+ENV GOPRIVATE="*.psdo.leidos.com,*-leidos.com"
 ENV GOPATH="${SDK_HOME}/go"
 ENV PATH="${GOPATH}/bin:${HOME}/sdk/go:${PATH}"
-RUN set -eux && \
-    export GO_ARCH="$(arch | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" && \
-    cd /tmp && mkdir -p ${SDK_HOME} && \
-    curl -k -o go.tar.gz -L https://go.dev/dl/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz && \
-    tar xzf go.tar.gz && mv go ${SDK_HOME} && rm /tmp/go.tar.gz && \
-    cd ${SDK_HOME} && mv go go${GO_VERSION} && ln -s go${GO_VERSION} go
 
-# pretty bash
-COPY --chown=${USERNAME}:${USERNAME} .bash_pretty ${HOME}/.bash_pretty
-RUN set -eux && \
-    echo "source ${HOME}/.bash_pretty" >> ${HOME}/.bashrc
+# installs
+RUN bash ${HOME}/bin/install/go.sh
+RUN bash ${HOME}/bin/install/kubectl.sh
+RUN bash ${HOME}/bin/install/kind.sh
+RUN	bash ${HOME}/bin/install/kubebuilder.sh
