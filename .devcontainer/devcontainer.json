@@ -5,7 +5,9 @@
     "context": ".",
     "target": "user",
     "args": {
-      "USERNAME": "${localEnv:USER:k8s}"
+      "USERNAME": "${localEnv:USER:k8s}",
+      "USER_UID": "${localEnv:HOST_UID:1000}",
+      "USER_GID": "${localEnv:HOST_GID:1000}"
     }
   },
   "customizations": {
@@ -72,7 +74,12 @@
   ],
   "workspaceMount": "source=${localWorkspaceFolder},target=/workdir/${localWorkspaceFolderBasename},type=bind,consistency=cached",
   "workspaceFolder": "/workdir/${localWorkspaceFolderBasename}",
+  "runArgs": [
+    "--add-host=host.docker.internal:host-gateway",
+    "--network=${localWorkspaceFolderBasename}"
+  ],
   "initializeCommand": {
+    "docker network": "docker network create ${localWorkspaceFolderBasename} > /dev/null 2>&1 || true;",
     "netrc": "touch ${localEnv:HOME}/.netrc",
     "ssh dir": "mkdir -p ${localEnv:HOME}/.ssh",
     "kube dir": "mkdir -p ${localEnv:HOME}/.kube-${localWorkspaceFolderBasename}",
@@ -82,5 +89,6 @@
     "claude": "mkdir -p ${localEnv:HOME}/.claude || true",
     "bash history": "touch ${localEnv:HOME}/.bash_history_${localWorkspaceFolderBasename}"
   },
-  "forwardPorts": []
+  "forwardPorts": [],
+  "postStartCommand": "sudo chgrp docker /var/run/docker.sock"
 }
