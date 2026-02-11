@@ -10,7 +10,7 @@ COPY cas.pem /etc/pki/ca-trust/source/anchors/custom_cas.pem
 RUN update-ca-trust
 
 RUN dnf install -y epel-release && dnf -y update
-RUN dnf install -y curl-minimal git iproute iputils jq make sudo wget which zip
+RUN dnf install -y curl-minimal git iproute iputils jq make sudo wget which zip zsh
 RUN dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
     dnf install -y docker-ce-cli
 
@@ -42,7 +42,11 @@ COPY --chown=${USERNAME}:${USERNAME} .bash_pretty ${HOME}/.bash_pretty
 RUN echo "source ${HOME}/.bash_pretty" >> ${HOME}/.bashrc
 
 # our dev tools
-COPY --chown=${USERNAME}:${USERNAME} bin ${HOME}/bin
+COPY --chown=${USERNAME}:${USERNAME} bin ${HOME}/bin 
+
+#kind 
+ENV KIND_CLUSTER_NAME=${REPO_NAME}
+ENV KIND_EXPERIMENTAL_DOCKER_NETWORK=${REPO_NAME}
 
 # claude code
 ENV PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
@@ -59,3 +63,4 @@ RUN bash ${HOME}/bin/install/go.sh
 RUN bash ${HOME}/bin/install/kubectl.sh
 RUN bash ${HOME}/bin/install/kind.sh
 RUN	bash ${HOME}/bin/install/kubebuilder.sh
+
