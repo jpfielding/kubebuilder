@@ -18,9 +18,10 @@ nodes:
     apiServer:
       certSANs:
         - "host.docker.internal"
-        - "${NAME}-control-plane"
         - "127.0.0.1"
         - "localhost"
 EOF
 
-kubectl config set-cluster kind-${NAME} --server=https://${NAME}-control-plane:6443
+kubectl config \
+  set-cluster kind-${NAME} --server=https://host.docker.internal:$(kubectl \
+  config view -o jsonpath='{.clusters[?(@.name=="kind-kind")].cluster.server}' | cut -d: -f3)
