@@ -14,7 +14,7 @@ This is a Kubebuilder learning lab - a minimal testbed for building, testing, an
 ## Development Environment
 
 All development happens inside VS Code Dev Containers. The devcontainer provides:
-- Go 1.25.6 toolchain
+- Go 1.26.0 toolchain
 - Docker access via `/var/run/docker.sock` mounted from host
 - Per-project isolated bash history and kubeconfig
 - Git credentials, SSH keys, and Claude config mounted from host
@@ -126,7 +126,7 @@ GitLab CI runs three test stages and one publish stage:
 3. **code-quality** - Run golangci-lint (allowed to fail)
 4. **build** - Compile binary artifact (bin/dicosctl)
 
-All stages use `golang:1.25.6-alpine3.22` image.
+All stages use `golang:1.26.0-alpine3.22` image.
 
 ## Important Conventions
 

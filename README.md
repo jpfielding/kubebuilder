@@ -15,7 +15,7 @@ A minimal testbed for building, testing, and deploying Kubernetes operators usin
 
 1. Open this project in VS Code
 2. When prompted, click "Reopen in Container" (or use Command Palette: `Dev Containers: Reopen in Container`)
-3. Wait for the container to build (includes Go 1.25.6, git, make, and all dependencies)
+3. Wait for the container to build (includes Go 1.26.0, git, make, and all dependencies)
 
 The dev container provides a complete development environment with all tools pre-configured.
 
@@ -116,7 +116,7 @@ make uninstall # Remove CRDs
 
 The development container includes:
 - Rocky Linux 9
-- Go 1.25.6
+- Go 1.26.0
 - Git, make, and build tools
 - VS Code Go extension
 - Persistent bash history per project
