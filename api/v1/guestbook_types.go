@@ -30,9 +30,21 @@ type GuestbookSpec struct {
 	// The following markers will use OpenAPI v3 schema to validate the value
 	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
 
-	// foo is an example field of Guestbook. Edit guestbook_types.go to remove/update
-	// +optional
-	Foo *string `json:"foo,omitempty"`
+	// Size is the number of Guestbook replicas to run
+	//+kubebuilder:validation:Minimum=1
+	//+kubebuilder:validation:Maximum=5
+	Size int32 `json:"size"`
+
+	// Message is the welcome message displayed by the guestbook
+	//+kubebuilder:validation:MinLength=1
+	//+optional
+	Message *string `json:"message,omitempty"`
+
+	// Names is a list of guest names to display in the guestbook
+	//+kubebuilder:validation:MinItems=0
+	//+kubebuilder:validation:MaxItems=100
+	//+optional
+	Names []string `json:"names,omitempty"`
 }
 
 // GuestbookStatus defines the observed state of Guestbook.
