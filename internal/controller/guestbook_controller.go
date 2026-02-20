@@ -19,6 +19,8 @@ package controller
 import (
 	"context"
 
+	"k8s.io/apimachinery/pkg/api/meta"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -39,17 +41,30 @@ type GuestbookReconciler struct {
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the Guestbook object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
-//
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.23.1/pkg/reconcile
 func (r *GuestbookReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = logf.FromContext(ctx)
+	log := logf.FromContext(ctx)
 
-	// TODO(user): your logic here
+	guestbook := &webappv1.Guestbook{}
+	if err := r.Get(ctx, req.NamespacedName, guestbook); err != nil {
+		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+
+	available := meta.FindStatusCondition(guestbook.Status.Conditions, "Available")
+	if available == nil || available.ObservedGeneration != guestbook.GetGeneration() || available.Status != metav1.ConditionTrue {
+		meta.SetStatusCondition(&guestbook.Status.Conditions, metav1.Condition{
+			Type:               "Available",
+			Status:             metav1.ConditionTrue,
+			Reason:             "Reconciled",
+			Message:            "Guestbook spec reconciled",
+			ObservedGeneration: guestbook.GetGeneration(),
+		})
+		if err := r.Status().Update(ctx, guestbook); err != nil {
+			log.Error(err, "unable to update Guestbook status")
+			return ctrl.Result{}, err
+		}
+	}
 
 	return ctrl.Result{}, nil
 }
